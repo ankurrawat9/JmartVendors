@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/homepanel2"
+
+    tools:context=".generatebill">
+
+    <LinearLayout
+        android:layout_width="409dp"
+        android:layout_height="87dp"
+        android:orientation="horizontal"
+        tools:layout_editor_absoluteX="1dp"
+        tools:layout_editor_absoluteY="1dp">
+
+
+        <ImageButton
+            android:id="@+id/imageButton"
+            android:layout_width="40dp"
+            android:layout_height="38dp"
+            android:layout_marginTop="12dp"
+            android:layout_weight="1"
+            android:background="@null"
+            app:srcCompat="@drawable/abc_vector_test" />
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="221dp"
+            android:layout_height="31dp"
+            android:layout_marginLeft="60dp"
+            android:layout_marginTop="31dp"
+            android:layout_marginRight="50dp"
+            android:layout_weight="1"
+
+            android:fontFamily="sans-serif"
+            android:text="Generate Bill"
+            android:textColor="#fff"
+            android:textSize="24sp" />
+
+    </LinearLayout>
+
+
+
+
+
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="35dp"
+        android:layout_marginRight="50dp"
+        android:ems="10"
+        android:fontFamily="sans-serif-medium"
+        android:hint="Item name / सामान  का नाम "
+        android:inputType="textPersonName"
+        android:textSize="15dp" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="185dp"
+        android:layout_height="43dp"
+        android:layout_marginLeft="100dp"
+        android:layout_marginTop="10dp"
+        android:textColor="#fff"
+        android:layout_marginRight="60dp"
+        android:layout_marginBottom="80dp"
+        android:text="सबमिट करें"
+        android:background="@drawable/style"
+
+        />
+
+
+
+
+
+
+
+
+</LinearLayout>
