@@ -14,12 +14,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
-        android:layout_marginTop="340dp"
+        android:layout_marginTop="360dp"
         android:layout_marginRight="60dp"
         android:layout_marginLeft="60dp"
-        android:textSize="12dp"
-        android:textColor="#000"
-        android:fontFamily="monospace"
+        android:textSize="20dp"
+        android:textColor="#000
+ "
 
 
         android:text="Select your city" />

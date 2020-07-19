@@ -18,6 +18,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -29,20 +30,29 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.List;
 
-public class addnewitem extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
-    private static  int PICK_IMAGE = 1;
-    private static final int CAMERA_REQUEST=1888;
-    private static final int PERMISSION_CAMERA =0;
+import id.zelory.compressor.Compressor;
 
+import static java.lang.System.out;
+
+public class addnewitem extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
+
+    private static final int CAMERA_REQUEST=1888;
+    ByteArrayOutputStream bytearrayoutputstream;
+     byte[] BYTE;
     ImageButton i1;
-Button b1,b2,b3;
-ImageView imageView;
-ArrayAdapter aa,aa2;
-EditText e1,e2,e3,e4,e5,e6,e7;
-String itemname,subtype,brandname,mandate,expdate,price,quantity,size,unit;
-Spinner s1,s2;
+    Button b1,b2,b3;
+    ImageView imageView;
+    ArrayAdapter aa,aa2;
+    EditText e1,e2,e3,e4,e5,e6,e7;
+    String itemname,subtype,brandname,mandate,expdate,price,quantity,size,unit;
+    Spinner s1,s2;
 
     String[] ss1={"kilogram","litres"};
 
@@ -54,6 +64,8 @@ Spinner s1,s2;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_addnewitem);
+
+        bytearrayoutputstream = new ByteArrayOutputStream();
 
         imageView = findViewById(R.id.imageView3);
         i1=findViewById(R.id.imageButton);
@@ -88,16 +100,6 @@ Spinner s1,s2;
         s2.setAdapter(aa2);
 
 
-
-
-
-        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(addnewitem.this, new String[]{Manifest.permission.CAMERA}, CAMERA_REQUEST);
-        }
-
-
-
-
         b2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -113,25 +115,13 @@ Spinner s1,s2;
 
             @Override
             public void onClick(View v) {
-
-
-
- takePhoto();
-
-
-
-
-            }
+             takePhoto();
+        }
         });
 
 
 
-
-
-
-
-
-        b1.setOnClickListener(new View.OnClickListener() {
+     b1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -166,22 +156,15 @@ Spinner s1,s2;
                 startActivity(i);
             }
         });
-
-
-
-
-    }
+   }
 
     private void openGallery() {
 
+
         Intent i = new Intent(
-                Intent.ACTION_PICK,
-                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-
-        startActivityForResult(i, PICK_IMAGE);
-
-
-
+                Intent.ACTION_GET_CONTENT);
+        i.setType("image/*");
+        startActivityForResult(Intent.createChooser(i,"pick up an image"),1);
     }
 
 
@@ -189,9 +172,6 @@ Spinner s1,s2;
 
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(cameraIntent, CAMERA_REQUEST);
-
-
-
     }
 
     @Override
@@ -203,36 +183,42 @@ Spinner s1,s2;
         if(requestCode==CAMERA_REQUEST)
         {
             Bitmap photo= (Bitmap) data.getExtras().get("data");
+            photo.compress(Bitmap.CompressFormat.JPEG,80,bytearrayoutputstream);
+
+            BYTE = bytearrayoutputstream.toByteArray();
+
+            Toast.makeText(this, "compressed sucessfully", Toast.LENGTH_SHORT).show();
             imageView.setImageBitmap(photo);
+            int lengthbmp = BYTE.length;
 
-
+        String x=String.valueOf(lengthbmp);
+            Toast.makeText(this, "size of image is "+x+" byte after compressing", Toast.LENGTH_SHORT).show();
         }
 
 
+if(resultCode==RESULT_OK && requestCode==1) {
+    imageUri = data.getData();
+    try {
+
+        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
+
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 0, bytearrayoutputstream);
+        BYTE = bytearrayoutputstream.toByteArray();
 
 
-        if (requestCode == PICK_IMAGE && resultCode == RESULT_OK && null != data) {
-            Uri selectedImage = data.getData();
-            String[] filePathColumn = {MediaStore.Images.Media.DATA};
+        int lengthbmp = BYTE.length;
 
-            Cursor cursor = getContentResolver().query(selectedImage,
-                    filePathColumn, null, null, null);
-            cursor.moveToFirst();
-
-            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-            String picturePath = cursor.getString(columnIndex);
-            cursor.close();
-
-            imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+        String x = String.valueOf(lengthbmp);
 
 
+        imageView.setImageBitmap(bitmap);
+        Toast.makeText(this, "size of image is " + x + " byte after compressing", Toast.LENGTH_SHORT).show();
 
 
-
-
-        }
-
-
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+    }
     }
 
 
@@ -277,4 +263,6 @@ Spinner s1,s2;
 
 
     }
+
+
 }
